@@ -34,7 +34,7 @@ type Router struct {
 func (s *Router) Map(router types.Router) {
 	// 后台服务管理
 	if s.opt != nil {
-		err := s.opt.Init(router, func(path types.Path, router types.Router, tokenChecker types.TokenChecker) error {
+		err := s.opt.Init(router, func(path types.Path, router types.Router, tokenChecker types.RouterPreHandle) error {
 			return nil
 		})
 		if err != nil {
