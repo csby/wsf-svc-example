@@ -75,6 +75,7 @@ func init() {
 		}
 	}
 
+	site := &Site{}
 	// init path of site
 	if cfg.Root == "" {
 		cfg.Root = filepath.Join(rootFolder, "site", "root")
@@ -88,6 +89,12 @@ func init() {
 	if cfg.Webapp.Root == "" {
 		cfg.Webapp.Root = filepath.Join(rootFolder, "site", "webapp")
 	}
+	if cfg.Webapp.Root == "" {
+		cfg.Webapp.Root = filepath.Join(rootFolder, "site", "webapp")
+	}
+	if site.root == "" {
+		site.root = filepath.Join(rootFolder, "site", strings.TrimLeft(site.Path(), "/"))
+	}
 
 	// init service
 	if strings.TrimSpace(cfg.Service.Name) == "" {
@@ -96,7 +103,7 @@ func init() {
 	serviceName := cfg.Service.Name
 	log.Init(cfg.Log.Level, serviceName, cfg.Log.Folder)
 	ext := &Ext{}
-	svrRouter := NewRouter(log, cfg, ext)
+	svrRouter := NewRouter(log, cfg, ext, site)
 	svrHost := host.NewHost(log, &cfg.Configure, svrRouter, nil)
 	svr, err = host.NewServer(log, svrHost, serviceName, svcArgument)
 	if err != nil {

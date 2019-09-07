@@ -8,15 +8,16 @@ import (
 	"os"
 )
 
-func NewRouter(log types.Log, cfg *Config, ext types.HttpHandlerExtend) types.HttpHandler {
+func NewRouter(log types.Log, cfg *Config, ext types.HttpHandlerExtend, site types.Site) types.HttpHandler {
 	instance := &Router{}
 	instance.SetLog(log)
 	instance.cfg = cfg
 	instance.ext = ext
+	instance.site = site
 
 	instance.optToken = memdb.NewToken(cfg.Operation.Api.Token.Expiration, "opt")
 	instance.optWSChannels = types.NewSocketChannelCollection()
-	instance.opt = opt.NewHandler(log, &cfg.Configure, instance.optToken, instance.optWSChannels)
+	instance.opt = opt.NewHandler(log, &cfg.Configure, instance.optToken, instance.optWSChannels, site)
 
 	return instance
 }
@@ -27,6 +28,7 @@ type Router struct {
 	cfg           *Config
 	ext           types.HttpHandlerExtend
 	opt           opt.Handler
+	site          types.Site
 	optToken      memdb.Token
 	optWSChannels types.SocketChannelCollection
 }
